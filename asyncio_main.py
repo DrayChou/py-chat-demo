@@ -161,10 +161,12 @@ class ClientProtocol(asyncio.Protocol):
                 else:
                     msg += ':' + i
 
+            # 添加文字到聊天框
             self.app.root.ids.chat_logs.text += (
             '[b][color=2980b9]{}:[/color][/b] {}\n'.format(nickname, esc_markup(msg))
             )
 
+            # 拷贝到剪贴板，奇怪
             Clipboard.copy(msg)
 
     def connection_lost(self, exc):
@@ -180,9 +182,10 @@ class RootWidget(ScreenManager):
 class ChatApp(App):
 
     def build(self):
-        self.base_folder =os.path.dirname(os.path.abspath('.'))
+        self.base_folder = os.path.abspath('.')
         self.setting_file = os.path.join(self.base_folder, 'chat_setting.json')
-        self.read_config() 
+        self.read_config()
+        self.title = 'Test Chat'
         return RootWidget()
 
     def read_config(self):
@@ -216,6 +219,9 @@ class ChatApp(App):
 
             self.root.current = 'chatroom'
             self.save_config()
+
+            # 设置新的名称
+            self.title = 'Test Chat: ' + self.nick
             print('-- connecting to ' + self.host)
 
     def reconnect(self):
